@@ -48,7 +48,7 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
     )
     rate = models.PositiveIntegerField(_("Rate"))
-    email = models.EmailField(_("Email"))
+    user_email = models.EmailField(_("Email"))
 
     class Meta:
         verbose_name = _("Comment")
@@ -120,8 +120,8 @@ class ProductOption(models.Model):
     value = models.CharField(_("Value"), max_length=200)
 
     class Meta:
-        verbose_name = _("Option")
-        verbose_name_plural = _("Options")
+        verbose_name = _("Product Option")
+        verbose_name_plural = _("Product Options")
 
     def __str__(self):
         return f'{self.product.name} {self.name}'
