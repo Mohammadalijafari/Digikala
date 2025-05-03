@@ -1,11 +1,31 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Document</title>
+    <title> Digikala {{ product.name }} </title>
 </head>
 <body>
-this is a test
+{{ categories }}
+<h1> {{ product.name }} </h1>
+<p> {{ product.english_name }} </p>
+<p> {{ product.description }} </p>
+<hr/>
+<div>
+    <ul>
+        {% for option in product.options.all %}
+        <li style="display: flex">
+            <div>{{ option.name }}</div>
+            :
+            <div>{{ option.value }}</div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+<div>
+    {% for image in product.images.all %}
+    <img src="{{ image.image.url }}" alt="{{ image.alt }}">
+    {% endfor %}
+</div>
 </body>
 </html>
