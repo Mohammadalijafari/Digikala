@@ -5,6 +5,17 @@ from .models import Product, Category, Comment, Question, Answer, Image, Product
 # Register your models here.
 class ProductImageInline(admin.TabularInline):
     model = Image
+    extra = 1
+
+
+class ProductOptionInline(admin.TabularInline):
+    model = ProductOption
+    extra = 1
+
+
+class ProductPriceInLine(admin.TabularInline):
+    model = ProductPrice
+    extra = 1
 
 
 @admin.register(Product)
@@ -12,7 +23,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ['id', 'english_name', 'name', 'category']
     list_filter = ['category']
     search_fields = ['name', 'english_name']
-    inlines = [ProductImageInline]
+    inlines = (ProductImageInline, ProductOptionInline, ProductPriceInLine)
 
 
 @admin.register(Category)
@@ -86,4 +97,3 @@ class ProductPriceAdmin(admin.ModelAdmin):
         ("Product", {'fields': ['product']}),
         ("Price", {'fields': ['price']}),
     ]
-
