@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -21,7 +20,9 @@ class Migration(migrations.Migration):
                 ('description', models.TextField(verbose_name='Description')),
                 ('icon', models.ImageField(upload_to='category_images/', verbose_name='Icon')),
                 ('image', models.ImageField(upload_to='category_images/', verbose_name='Image')),
-                ('parent', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='products.category', verbose_name='Parent Category')),
+                ('parent',
+                 models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='products.category',
+                                   verbose_name='Parent Category')),
             ],
             options={
                 'verbose_name': 'Category',
@@ -35,7 +36,8 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=200, verbose_name='Persian Name')),
                 ('english_name', models.CharField(max_length=200, verbose_name='English Name')),
                 ('description', models.TextField(verbose_name='Description')),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='products.category', verbose_name='Category')),
+                ('category', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='products.category',
+                                               verbose_name='Category')),
             ],
         ),
         migrations.CreateModel(
@@ -46,7 +48,8 @@ class Migration(migrations.Migration):
                 ('alt', models.CharField(max_length=100, verbose_name='Alternative Name')),
                 ('image', models.ImageField(upload_to='products/', verbose_name='Image')),
                 ('is_default', models.BooleanField(default=False, verbose_name='Is Default image')),
-                ('prd', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.product', verbose_name='Product')),
+                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.product',
+                                              verbose_name='Product')),
             ],
             options={
                 'verbose_name': 'Image',
@@ -61,7 +64,8 @@ class Migration(migrations.Migration):
                 ('text', models.TextField(verbose_name='Text')),
                 ('rate', models.PositiveIntegerField(verbose_name='Rate')),
                 ('email', models.EmailField(max_length=254, verbose_name='Email')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.product', verbose_name='Product')),
+                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.product',
+                                              verbose_name='Product')),
             ],
             options={
                 'verbose_name': 'Comment',
@@ -74,7 +78,8 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=200, verbose_name='Name')),
                 ('value', models.CharField(max_length=200, verbose_name='Value')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.product', verbose_name='Product')),
+                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.product',
+                                              verbose_name='Product')),
             ],
             options={
                 'verbose_name': 'Option',
@@ -88,7 +93,8 @@ class Migration(migrations.Migration):
                 ('price', models.PositiveIntegerField(verbose_name='Price')),
                 ('create_at', models.DateTimeField(auto_now_add=True, verbose_name='Create at')),
                 ('update_at', models.DateTimeField(auto_now=True, verbose_name='Update at')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.product', verbose_name='Product')),
+                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.product',
+                                              verbose_name='Product')),
             ],
             options={
                 'verbose_name': 'Product Price',
@@ -101,7 +107,8 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('text', models.TextField(verbose_name='Text')),
                 ('user_email', models.EmailField(max_length=254, verbose_name='Email')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.product', verbose_name='Product')),
+                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.product',
+                                              verbose_name='Product')),
             ],
             options={
                 'verbose_name': 'Question',
@@ -113,7 +120,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('text', models.TextField(verbose_name='Text')),
-                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.question', verbose_name='Question')),
+                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.question',
+                                               verbose_name='Question')),
             ],
             options={
                 'verbose_name': 'Answer',
