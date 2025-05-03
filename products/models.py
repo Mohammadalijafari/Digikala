@@ -61,10 +61,11 @@ class Comment(models.Model):
 class Image(models.Model):
     name = models.CharField(_("Name"), max_length=50)
     alt = models.CharField(_("Alternative Name"), max_length=100)
-    prd = models.ForeignKey(
+    product = models.ForeignKey(
         "Product",
         verbose_name=_("Product"),
         on_delete=models.CASCADE,
+        related_name="images",
     )
     image = models.ImageField(_("Image"), upload_to="products/")
     is_default = models.BooleanField(_("Is Default image"), default=False)
@@ -115,6 +116,7 @@ class ProductOption(models.Model):
         "Product",
         verbose_name=_("Product"),
         on_delete=models.CASCADE,
+        related_name="options",
     )
     name = models.CharField(_("Name"), max_length=200)
     value = models.CharField(_("Value"), max_length=200)
