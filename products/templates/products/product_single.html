@@ -1,14 +1,10 @@
-<!doctype html>
-{% load static %}
-<html lang="en" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title> Digikala {{ product.name }} </title>
-    <link rel="stylesheet" href="{% static 'styles/style.css' %}"/>
-</head>
-<body>
-{{ categories }}
+{% extends 'base/base.html' %}
+
+{% block title %}
+{{ product.name }}
+{% endblock title %}
+
+{% block main %}
 <h1> {{ product.name }} </h1>
 <p> {{ product.english_name }} </p>
 <p> {{ product.description }} </p>
@@ -29,5 +25,5 @@
     <img src="{{ image.image.url }}" alt="{{ image.alt }}">
     {% endfor %}
 </div>
-</body>
-</html>
+{% endblock main %}
+
