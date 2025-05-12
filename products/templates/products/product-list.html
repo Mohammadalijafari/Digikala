@@ -3,20 +3,24 @@
 لیست کالاها
 {% endblock title %}
 {% block main %}
+<form action="." method="get">
+    <label>
+        <input type="text" name="q">
+        <input type="button" value="search">
+    </label>
+</form>
 <ul>
     {% for product in products %}
     <li>
-        <a href="/products/{{ product.id }}">
+        <a href="{% url 'products:product_single' product.id %}">
             <div>
                 <h2> {{ product.name }} </h2>
             </div>
         </a>
     </li>
     {% endfor %}
-
 </ul>
 {% endblock main %}
-
 
 
 
