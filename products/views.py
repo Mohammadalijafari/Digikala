@@ -17,11 +17,11 @@ def product_list_view(request):
     return render(request, 'products/product-list.html', context={'products': products})
 
 
-def product_single_view(request, product_id):
+def product_detail_view(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     context = {'product': product}
     return render(
         request=request,
-        template_name="products/product-single.html",
+        template_name="products/product_detail.html",
         context=context
     )

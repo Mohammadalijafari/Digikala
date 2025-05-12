@@ -12,7 +12,7 @@
 <ul>
     {% for product in products %}
     <li>
-        <a href="{% url 'products:product_single' product.id %}">
+        <a href="{% url 'products:product_detail' product.id %}">
             <div>
                 <h2> {{ product.name }} </h2>
             </div>
