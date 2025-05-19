@@ -1,4 +1,4 @@
-from .models import Product
+from .models import Product, Comment
 from django.shortcuts import get_object_or_404, render
 
 
@@ -19,7 +19,20 @@ def product_list_view(request):
 
 def product_detail_view(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    context = {'product': product}
+    seller_prices = product.seller_prices.all()
+    if request.method == 'POST':
+        comment = Comment.objects.create(
+            user_email=request.POST.get('user_email', None),
+            title=request.POST.get('title', None),
+            text=request.POST.get('text', None),
+            rate=int(request.POST.get('rate', 0)),
+            product=product,
+        )
+    context = {
+        'product': product,
+        'seller_prices': seller_prices,
+        'comments_count': product.product_comments.count()
+    }
     return render(
         request=request,
         template_name="products/product_detail.html",

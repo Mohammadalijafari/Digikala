@@ -6,7 +6,7 @@ from django.urls import reverse
 # Create your models here.
 class Seller(models.Model):
     name = models.CharField(verbose_name=_("Name"), max_length=255)
-    slug = models.SlugField(verbose_name=_("Slug"), max_length=255, unique=True)
+    slug = models.SlugField(verbose_name=_("Slug"), max_length=255, unique=True, db_index=True)
 
     class Meta:
         verbose_name = _("Seller")

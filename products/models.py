@@ -1,4 +1,3 @@
-from typing import Iterable, Optional
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
@@ -11,7 +10,7 @@ class Brand(models.Model):
     slug = models.SlugField(_("Slug"), max_length=200, unique=True, db_index=True)
 
     def __str__(self):
-        return self.name
+        return self.slug
 
     class Meta:
         verbose_name = _("Brand")
@@ -37,7 +36,7 @@ class Product(models.Model):
     sellers = models.ManyToManyField(
         "sellers.Seller",
         verbose_name=_("Sellers"),
-        through="sellers.SellerProductPrice",
+        through="SellerProductPrice",
     )
 
     @property
@@ -94,6 +93,7 @@ class Comment(models.Model):
         "Product",
         verbose_name=_("Product"),
         on_delete=models.CASCADE,
+        related_name="product_comments",
     )
     rate = models.PositiveIntegerField(_("Rate"))
     user_email = models.EmailField(_("Email"))
@@ -161,17 +161,17 @@ class Answer(models.Model):
 
 class ProductOption(models.Model):
     product = models.ForeignKey(
-        "Product",
+        'Product',
         verbose_name=_("Product"),
         on_delete=models.CASCADE,
-        related_name="options",
+        related_name="product_options",
     )
-    name = models.CharField(_("Name"), max_length=200)
+    name = models.CharField(_("Attribute"), max_length=200)
     value = models.CharField(_("Value"), max_length=200)
 
     class Meta:
-        verbose_name = _("Product Option")
-        verbose_name_plural = _("Product Options")
+        verbose_name = _("ProductOption")
+        verbose_name_plural = _("ProductOptions")
 
     def __str__(self):
         return f'{self.product.name} {self.name}'
@@ -182,7 +182,7 @@ class SellerProductPrice(models.Model):
         "Product",
         verbose_name=_("Product"),
         on_delete=models.CASCADE,
-        related_name="product_sellers",
+        related_name="seller_prices",
     )
     seller = models.ForeignKey(
         "sellers.Seller",

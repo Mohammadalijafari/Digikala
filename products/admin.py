@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, Category, Comment, Question, Answer, Image, ProductOption, ProductPrice
+from .models import Product, Category, Comment, Question, Answer, Image, ProductOption, SellerProductPrice, Brand
 
 
 # Register your models here.
@@ -14,7 +14,7 @@ class ProductOptionInline(admin.TabularInline):
 
 
 class ProductPriceInLine(admin.TabularInline):
-    model = ProductPrice
+    model = SellerProductPrice
     extra = 1
 
 
@@ -88,8 +88,8 @@ class ProductOptionAdmin(admin.ModelAdmin):
     ]
 
 
-@admin.register(ProductPrice)
-class ProductPriceAdmin(admin.ModelAdmin):
+@admin.register(SellerProductPrice)
+class SellerProductPriceAdmin(admin.ModelAdmin):
     list_display = ['id', 'product', 'price', 'create_at', 'update_at']
     list_filter = ['product']
     search_fields = ['product']
@@ -97,3 +97,8 @@ class ProductPriceAdmin(admin.ModelAdmin):
         ("Product", {'fields': ['product']}),
         ("Price", {'fields': ['price']}),
     ]
+
+
+@admin.register(Brand)
+class BrandAdmin(admin.ModelAdmin):
+    pass
