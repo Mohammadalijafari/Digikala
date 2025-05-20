@@ -1,4 +1,4 @@
-from .models import Product, Comment
+from .models import Product, Comment, SellerProductPrice
 from django.shortcuts import get_object_or_404, render
 
 
@@ -19,7 +19,7 @@ def product_list_view(request):
 
 def product_detail_view(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    seller_prices = product.seller_prices.all()
+    seller_prices = get_product_last_price(product_id)
     if request.method == 'POST':
         comment = Comment.objects.create(
             user_email=request.POST.get('user_email', None),
@@ -37,4 +37,13 @@ def product_detail_view(request, product_id):
         request=request,
         template_name="products/product_detail.html",
         context=context
+    )
+
+
+def get_product_last_price(product_id):
+    return SellerProductPrice.objects.raw(
+        f"""select * from products_sellerproductprice
+        where product_id = {product_id}
+        group by seller_id
+        having max(update_at)""", {'id': product_id}
     )
