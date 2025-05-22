@@ -79,7 +79,7 @@
         <div id="product-comments" class="col-12">
             <div class="row">
                 <div class="col-12">
-                    <form action="" method="post">
+                    <form action={% url 'products:create_comment' product.id %} method="post">
                         {% csrf_token %}
                         <div>
                             <label for="email_input">ایمیل</label>
@@ -97,6 +97,7 @@
                             <label for="comment_text">متن نظر</label>
                             <textarea name="text" id="comment_text" cols="30" rows="10"></textarea>
                         </div>
+                        <input type="number" name="product_id" value={{ product.id }} hidden>
                         <input type="submit" value="ثبت نظر">
                     </form>
                 </div>

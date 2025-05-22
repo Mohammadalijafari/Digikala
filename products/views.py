@@ -1,5 +1,6 @@
-from .models import Product, Comment, SellerProductPrice
-from django.shortcuts import get_object_or_404, render
+from .models import Product, Comment
+from django.shortcuts import get_object_or_404, render, redirect
+from .utils import get_product_last_price_list
 
 
 # Create your views here.
@@ -19,15 +20,7 @@ def product_list_view(request):
 
 def product_detail_view(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    seller_prices = get_product_last_price(product_id)
-    if request.method == 'POST':
-        comment = Comment.objects.create(
-            user_email=request.POST.get('user_email', None),
-            title=request.POST.get('title', None),
-            text=request.POST.get('text', None),
-            rate=int(request.POST.get('rate', 0)),
-            product=product,
-        )
+    seller_prices = get_product_last_price_list(product_id)
     context = {
         'product': product,
         'seller_prices': seller_prices,
@@ -40,10 +33,13 @@ def product_detail_view(request, product_id):
     )
 
 
-def get_product_last_price(product_id):
-    return SellerProductPrice.objects.raw(
-        f"""select * from products_sellerproductprice
-        where product_id = {product_id}
-        group by seller_id
-        having max(update_at)""", {'id': product_id}
-    )
+def create_comment(request, product_id):
+    if request.method == 'POST':
+        comment = Comment.objects.create(
+            user_email=request.POST.get('user_email', None),
+            title=request.POST.get('title', None),
+            text=request.POST.get('text', None),
+            rate=int(request.POST.get('rate', 0)),
+            product_id=request.POST.get('product_id', None),
+        )
+        return redirect('products:product_detail', product_id=product_id)
