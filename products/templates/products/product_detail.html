@@ -79,25 +79,9 @@
         <div id="product-comments" class="col-12">
             <div class="row">
                 <div class="col-12">
-                    <form action={% url 'products:create_comment' product.id %} method="post">
+                    <form method="post">
                         {% csrf_token %}
-                        <div>
-                            <label for="email_input">ایمیل</label>
-                            <input id="email_input" type="email" name="user_email" required>
-                        </div>
-                        <div>
-                            <label for="comment_title">عنوان</label>
-                            <input id="comment_title" type="text" name="title">
-                        </div>
-                        <div>
-                            <label for="comment_rate">امتیاز</label>
-                            <input id="comment_rate" type="number" name="rate">
-                        </div>
-                        <div>
-                            <label for="comment_text">متن نظر</label>
-                            <textarea name="text" id="comment_text" cols="30" rows="10"></textarea>
-                        </div>
-                        <input type="number" name="product_id" value={{ product.id }} hidden>
+                        {{ form }}
                         <input type="submit" value="ثبت نظر">
                     </form>
                 </div>
