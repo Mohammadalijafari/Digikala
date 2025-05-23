@@ -80,10 +80,10 @@
             <div class="row">
                 <div class="col-12">
                     <form method="post">
-                        {% csrf_token %}
-                        {{ form }}
-                        <input type="submit" value="ثبت نظر">
+                        {% include "components/forms.html" with form=comment_form %}
+                        <input type="submit" value="ثبت نظر" class="btn btn-primary">
                     </form>
+                    <div>...</div>
                 </div>
                 {% for comment in product.product_comments.all %}
                 <div class="col-12">

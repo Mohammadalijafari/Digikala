@@ -1,0 +1,12 @@
+{% for hidden in form.hidden_fields %}
+{{ hidden }}
+{% endfor %}
+
+{% csrf_token %}
+{{ form.non_field_errors }}
+{% for field in form.visible_fields %}
+<div class="form-group">
+    {{ field.label_tag }} {{ field }}
+    {{ field.errors }}
+</div>
+{% endfor %}
