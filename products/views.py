@@ -38,7 +38,7 @@ def product_detail_view(request, product_id):
 
     context = {
         'product': product,
-        'seller_prices': product.seller_last_prices,
+        'seller_prices': product.sellers_last_prices,
         'comments_count': product.product_comments.count(),
         'comment_form': form,
     }

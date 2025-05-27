@@ -53,6 +53,15 @@ class Product(models.Model):
         categories_list.append(current_category)
         return categories_list
 
+    @property
+    def sellers_last_prices(self):
+        return SellerProductPrice.objects.raw(
+            f"""SELECT * FROM products_sellerproductprice
+                WHERE product_id = %(id)s
+                GROUP BY seller_id
+                HAVING Max(update_at)""", {'id': self.id}
+        )
+
     class Meta:
         verbose_name = _("Product")
         verbose_name_plural = _("Products")
