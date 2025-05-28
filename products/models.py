@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
+from django.conf import settings
 
 
 # Create your models here.
@@ -57,8 +58,8 @@ class Product(models.Model):
     def sellers_last_prices(self):
         return SellerProductPrice.objects.raw(
             f"""SELECT * FROM products_sellerproductprice
-                WHERE product_id = %(id)s
-                GROUP BY seller_id
+                WHERE %(id)s = product_id
+GROUP BY seller_id
                 HAVING Max(update_at)""", {'id': self.id}
         )
 
@@ -106,6 +107,12 @@ class Comment(models.Model):
     )
     rate = models.PositiveIntegerField(_("Rate"))
     user_email = models.EmailField(_("Email"))
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name=_("User"),
+        on_delete=models.CASCADE,
+        related_name="user_comments",
+    )
 
     class Meta:
         verbose_name = _("Comment")
