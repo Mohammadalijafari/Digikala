@@ -38,6 +38,9 @@ class UserManager(BaseUserManager):
             raise ValueError("Superuser must have is_superuser=True.")
         return self._create_user(email, password, **extra_fields)
 
+    def get_active_users(self):
+        return self.filter(is_active=True)
+
 
 class ActiveUserManager(UserManager):
     def get_queryset(self):
