@@ -1,15 +1,15 @@
-from datetime import timezone
-
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import PermissionsMixin
-from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
-
 from django.db import models
+from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import PermissionsMixin
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 from django.core.mail import send_mail
+from django.contrib.auth.hashers import make_password
 
 
 # Create your models here.
+
+
 class UserManager(BaseUserManager):
 
     def _create_user(self, email, password, **extra_fields):
@@ -38,67 +38,38 @@ class UserManager(BaseUserManager):
             raise ValueError("Superuser must have is_superuser=True.")
         return self._create_user(email, password, **extra_fields)
 
-    def get_active_users(self):
-        return self.filter(is_active=True)
 
-
-class ActiveUserManager(UserManager):
-    def get_queryset(self):
-        return super().get_queryset().filter(is_active=True)
-
-
-class User(AbstractBaseUser, PermissionsMixin):
-    first_name = models.CharField(
-        verbose_name=_("First name"),
-        max_length=150,
-        blank=True,
-    )
-    last_name = models.CharField(
-        verbose_name=_("Last name"),
-        max_length=150,
-        blank=True,
-    )
-    email = models.EmailField(
-        verbose_name=_("Email"),
-        max_length=254,
-        unique=True,
-        blank=True,
-    )
+class User(AbstractBaseUser, PermissionsMixin, ):
+    first_name = models.CharField(_("first name"), max_length=150, blank=True)
+    last_name = models.CharField(_("last name"), max_length=150, blank=True)
+    email = models.EmailField(_("email address"), unique=True)
     mobile = models.CharField(
-        verbose_name=_("Mobile number"),
-        max_length=11,
-        unique=True,
-        blank=True,
-        null=True,
-    )
+        _("mobile number"), max_length=11, unique=True, blank=True, null=True)
     is_staff = models.BooleanField(
-        verbose_name=_("Is staff"),
-        default=True,
+        _("staff status"),
+        default=False,
         help_text=_(
-            "Designates whether the user can log into this admin site. "
-        ),
+            "Designates whether the user can log into this admin site."),
     )
     is_active = models.BooleanField(
-        verbose_name=_("Is active"),
+        _("active"),
         default=True,
         help_text=_(
             "Designates whether this user should be treated as active. "
             "Unselect this instead of deleting accounts."
-        )
+        ),
     )
-    date_joined = models.DateTimeField(
-        verbose_name=_("Date joined"),
-        default=timezone.now,
-    )
+    date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
+
     objects = UserManager()
-    EMAIL_FIELD = 'email'
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['email']
+
+    EMAIL_FIELD = "email"
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
 
     class Meta:
-        verbose_name = _("User")
-        verbose_name_plural = _("Users")
-        abstract = True
+        verbose_name = _("user")
+        verbose_name_plural = _("users")
 
     def clean(self):
         super().clean()
@@ -108,24 +79,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         Return the first_name plus the last_name, with a space in between.
         """
-        full_name = '%s %s' % (self.first_name, self.last_name)
+        full_name = "%s %s" % (self.first_name, self.last_name)
         return full_name.strip()
 
     def get_short_name(self):
-        """
-        Return the short name for the user.
-        """
+        """Return the short name for the user."""
         return self.first_name
 
     def email_user(self, subject, message, from_email=None, **kwargs):
-        """
-        Sends an email to this User.
-        """
+        """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
-
-
-class ActiveUser(User):
-    objects = ActiveUserManager()
-
-    class Meta:
-        proxy = True

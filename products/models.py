@@ -112,6 +112,8 @@ class Comment(models.Model):
         verbose_name=_("User"),
         on_delete=models.CASCADE,
         related_name="user_comments",
+        null=True,
+        blank=True,
     )
 
     class Meta:
