@@ -44,13 +44,13 @@ class ImageAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user_email', 'product', 'title', 'rate']
+    list_display = ['id', 'user', 'product', 'title', 'rate']
     list_filter = ['product']
     search_fields = ['email', 'product']
     fieldsets = [
         ("Details", {'fields': ['title', 'text', 'rate']}),
         ("Product", {'fields': ['product']}),
-        ("Writer", {'fields': ['user_email']}),
+        ("Writer", {'fields': ['user']}),
     ]
 
 

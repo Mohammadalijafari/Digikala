@@ -1,4 +1,4 @@
-from .models import Product, Comment
+from .models import Product, Comment, Category
 from django.shortcuts import get_object_or_404, render, redirect
 from products.forms import ProductCommentModelForm
 
@@ -18,34 +18,31 @@ def product_list_view(request):
     return render(request, 'products/product-list.html', context={'products': products})
 
 
-def product_detail_view(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
+def product_detail_view(request, pk):
+    p = get_object_or_404(Product.objects.select_related(
+        'category').prefetch_related("product_comments"), pk=pk)
 
-    if request.method == 'GET':
-        form = ProductCommentModelForm(initial={'product': product})
-
+    if request.method == "GET":
+        form = ProductCommentModelForm(initial={'product': p})
     elif request.method == 'POST':
         form = ProductCommentModelForm(request.POST)
-
         if form.is_valid():
-            # this is how we handle it with forms.ModelForms
-            form.save(commit=True)
-            return redirect('products:product_detail', product_id=product.id)
-
-            # this is how we handle it with forms.Form
-            # Comment.objects.create(**form.cleaned_data, product=product)
-            # return redirect('products:product_detail', product_id=product_id)
-
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.save()
+            return redirect('products:product_detail', pk=pk)
     context = {
-        'product': product,
-        'seller_prices': product.sellers_last_prices,
-        'comments_count': product.product_comments.count(),
-        'comment_form': form,
+        "default_product_seller": p.sellers_last_prices[0],
+        "product": p,
+        "product_sellers": p.sellers_last_prices,
+        "comments": p.product_comments.all(),
+        "comment_counts": p.product_comments.all().count(),
+        'comment_form': form
     }
     return render(
+        template_name='products/product_detail.html',
         request=request,
-        template_name="products/product_detail.html",
-        context=context,
+        context=context
     )
 
 
@@ -60,3 +57,30 @@ def create_comment(request, product_id):
         )
         return redirect('products:product_detail', product_id=product_id)
     return None
+
+
+def home(request):
+    query = Product.objects.all()
+    most_off_products = query
+    most_sell = query
+    most_recent = query
+    context = {
+        "most_off_products": most_off_products,
+        "most_sell": most_sell,
+        "most_recent": most_recent,
+        "banners": [],
+    }
+
+    return render(
+        template_name='products/index.html',
+        request=request,
+        context=context
+    )
+
+
+def category_view(request, category_slug):
+    pass
+
+
+def brand_view(request, category_slug):
+    pass

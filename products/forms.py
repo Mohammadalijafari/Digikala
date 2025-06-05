@@ -33,13 +33,18 @@ from products.models import Comment, Product
 class ProductCommentModelForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = "__all__"
+        exclude = ('user',)
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'user_email': forms.EmailInput(attrs={'class': 'form-control'}),
             'text': forms.Textarea(attrs={'class': 'form-control'}),
             'rate': forms.NumberInput(attrs={'class': 'form-control'}),
             'product': forms.HiddenInput()
+        }
+        labels = {
+            'title': 'عنوان',
+            'text': 'متن',
+            'rate': 'امتیاز',
         }
 
     def save(self, commit: bool = ...):

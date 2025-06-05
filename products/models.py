@@ -63,6 +63,12 @@ GROUP BY seller_id
                 HAVING Max(update_at)""", {'id': self.id}
         )
 
+    @property
+    def default_product_seller(self):
+        if self.sellers_last_prices:
+            return self.sellers_last_prices[0]
+        return None
+
     class Meta:
         verbose_name = _("Product")
         verbose_name_plural = _("Products")
@@ -106,14 +112,11 @@ class Comment(models.Model):
         related_name="product_comments",
     )
     rate = models.PositiveIntegerField(_("Rate"))
-    user_email = models.EmailField(_("Email"))
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         verbose_name=_("User"),
         on_delete=models.CASCADE,
-        related_name="user_comments",
         null=True,
-        blank=True,
     )
 
     class Meta:
@@ -208,8 +211,15 @@ class SellerProductPrice(models.Model):
         on_delete=models.CASCADE,
     )
     price = models.PositiveIntegerField(_("Price"))
+    discount = models.PositiveSmallIntegerField(_("Discount"), default=0)
     create_at = models.DateTimeField(_("Create at"), auto_now_add=True, auto_now=False)
     update_at = models.DateTimeField(_("Update at"), auto_now=True, auto_now_add=False)
+
+    @property
+    def discounted_price(self):
+        if self.discount > 0:
+            return int(self.price - (self.discount * self.price / 100))
+        return self.price
 
     class Meta:
         verbose_name = _("Seller Product Price")
