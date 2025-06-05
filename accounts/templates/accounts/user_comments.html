@@ -1,0 +1,16 @@
+{% extends "accounts/user_admin_template.html" %}
+{% block page_title %}
+User Comments
+{% endblock page_title %}
+{% block content %}
+<div class="row">
+    {% for comment in comments %}
+    <div class="col-12">
+        <h5>{{ comment.title }}</h5>
+        <span>{{ comment.user.email }}</span>
+        <p>{{ comment.text }}</p>
+        <p>{{ comment.product.english_name }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}

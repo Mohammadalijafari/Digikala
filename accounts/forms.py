@@ -1,6 +1,19 @@
+from typing import Any, Dict
 from django import forms
 from django.contrib.auth import authenticate
 from .models import User
+from django.contrib.auth.forms import AuthenticationForm, UsernameField
+
+
+class MyAuthenticationForm(AuthenticationForm):
+    username = UsernameField(widget=forms.TextInput(
+        attrs={"autofocus": True, 'class': "form-control"}), label="نام کاربری")
+    password = forms.CharField(
+        label="کلمه عبور",
+        strip=False,
+        widget=forms.PasswordInput(
+            attrs={"autocomplete": "current-password", 'class': "form-control"}),
+    )
 
 
 class UserLoginForm(forms.Form):
@@ -14,7 +27,7 @@ class UserLoginForm(forms.Form):
     password = forms.CharField(
         widget=forms.PasswordInput({"class": "form-control"}), required=True)
 
-    def clean(self):
+    def clean(self) -> Dict[str, Any]:
         clean_data = super().clean()
         user = authenticate(
             self.request,
@@ -30,35 +43,43 @@ class UserLoginForm(forms.Form):
 
 class UserRegisterFrom(forms.ModelForm):
     password1 = forms.CharField(
-        widget=forms.PasswordInput(), required=True, label="کلمه عبور"
-    )
+        widget=forms.PasswordInput({"class": "from-control"}),
+        label='کلمه عبور')
     password2 = forms.CharField(
-        widget=forms.PasswordInput(), required=True, label="تکرار کلمه عبور"
-    )
+        widget=forms.PasswordInput({"class": "from-control"}),
+        label='تکرار کلمه عبور')
 
     class Meta:
         model = User
         fields = (
-            'email',
             'first_name',
             'last_name',
-            'mobile'
+            'email',
+            'mobile',
+            'password1',
+            'password2'
         )
 
-    def clean(self):
+    def clean(self) -> Dict[str, Any]:
         cleaned_data = super().clean()
-        password1 = cleaned_data.pop("password1", None)
-        password2 = cleaned_data.pop("password2", None)
-        if password1 and password2 and password1 != password2:
-            self.add_error(
-                'password2',
-                forms.ValidationError('در وارد کردن کلمه عبور دقت کنید', code='password_mismatch'))
+        password1 = cleaned_data.pop('password1', None)
+        password2 = cleaned_data.pop('password2', None)
+        if password1 != password2:
+            self.add_error('password2', forms.ValidationError(
+                'در وارد کردن کلمه عبور دقت کنید', code='invalid'))
+            # raise forms.ValidationError(
+            #     'در وارد کردن کلمه عبور دقت کنید', code='invalid')
+
         cleaned_data.setdefault('password', password1)
         return cleaned_data
 
-    def save(self, commit: bool = ...):
+    def save(self, commit: bool = ...) -> Any:
         user = super().save(commit)
         user.set_password(self.cleaned_data['password'])
         if commit:
             user.save()
         return user
+
+
+class MyAuthenticationForm:
+    pass
