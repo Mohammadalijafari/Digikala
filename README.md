@@ -22,6 +22,8 @@ Prerequisites
 Python 3.10+
 pip
 PostgreSQL (or update digikala/settings.py to use SQLite for local dev)
+
+
 Installation
 bash
 git clone https://github.com/Mohammadalijafari/Digikala.git
@@ -29,8 +31,8 @@ cd Digikala
 python -m venv venv
 source venv/bin/activate   # on Windows: venv\Scripts\activate
 pip install -r requirements.txt
-Configure the database
 
+Configure the database
 Update the DATABASES setting in digikala/settings.py with your PostgreSQL credentials, or swap in SQLite for quick local testing.
 
 Run migrations & start the server
